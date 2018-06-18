@@ -4,10 +4,10 @@ A tool to help create homebrew recipes quickly and easily.
 
 
 ## Install instructions
-* `npm install` in the root
+* `npm install` in the root directory
 
 ## Running instructions
-From within the root folder:
+From within the root directory:
 1. `npm run build`
 2. `npm start`
 
