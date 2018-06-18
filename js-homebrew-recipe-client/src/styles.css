@@ -1,0 +1,31 @@
+/* You can add global styles to this file, and also import other style files */
+@import "~@angular/material/prebuilt-themes/indigo-pink.css";
+
+* {
+    box-sizing: border-box;
+    font-family: Roboto, "Helvetica Neue", sans-serif;
+}
+
+body, html {
+    height: 90vh;
+}
+
+.rc__flex-container {
+    display: flex;
+}
+
+.rc__flex-basis-0 > * {
+    flex-basis: 0;
+}
+
+.rc__flex-3 {
+    flex-grow: 3;
+}
+
+.rc__flex-2 {
+    flex-grow: 2;
+}
+
+.rc__flex-1 {
+    flex-grow: 1;
+}
