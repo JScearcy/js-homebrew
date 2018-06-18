@@ -1,0 +1,13 @@
+{
+  "name": "js-homebrew",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "build": "cd ./js-homebrew-recipe-server && npm run prestart:prod && cd ../js-homebrew-recipe-client && ng build --prod --aot",
+    "start": "cd ./js-homebrew-recipe-server/dist && node main.js",
+    "preinstall": "cd ./js-homebrew-recipe-server && npm install && cd ../js-homebrew-recipe-client && npm install"
+  },
+  "author": "Jacob Scearcy <JacobScearcy@gmail.com> (https://github.com/JScearcy)",
+  "license": "ISC"
+}
