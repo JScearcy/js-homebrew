@@ -5,6 +5,7 @@ import { AppModule } from './app/app.module';
 import { FastifyAdapter } from '@nestjs/core/adapters/fastify-adapter';
 
 const PORT = process.env.PORT || 8080;
+const HOST = process.env.HOST || '0.0.0.0';
 
 async function bootstrap() {
     const app = await NestFactory.create(AppModule, new FastifyAdapter());
@@ -12,6 +13,6 @@ async function bootstrap() {
         root: path.resolve(__dirname + '/../dist/js-homebrew-recipe-client'),
     });
 
-    app.listen(PORT, '0.0.0.0');
+    app.listen(PORT, HOST);
 }
 bootstrap();
