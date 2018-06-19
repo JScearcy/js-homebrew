@@ -10,8 +10,8 @@ import { YeastModel } from '@models/yeast-model';
 export class RecipeModel {
     og: number = 1.000; // Original Gravity estimate
     fg: number; // Final Gravity estimate
-    ibu: number; // IBU estimate
-    alc: number; // ABV estimate
+    ibu: number = 0; // IBU estimate
+    abv: number; // ABV estimate
     mcu: number = 0; // initial color estimate used for calculating SRM
     srm: number = 0; // final color estimate
     efficiency: number = 0.7; // Brewers efficiency
@@ -65,16 +65,54 @@ export class RecipeModel {
         this.srm = this.srm > 50 ? 50 : this.srm;
 
         this.ingredients.grains.push({ grain, weight });
+
+        this.calculateFgAndAbv();
     }
 
     private addHop({ hop, weight }: { hop: HopModel, weight: number }) {
-        // TODO: Add logic for calculating IBU and update recipe model
+        // AAUs calculated using this formula: AAU = Weight (oz) x % Alpha Acids
+        const aauActual = weight * hop.Alpha_Acid;
+        // approx eulers number for following formula
+        const euler = 2.71828;
+        // Utilization = f(G) x f(T)
+        // where: 
+        // f(G) = 1.65 x 0.000125^(Gb - 1) 
+        // f(T) = [1 - e^(-0.04 x T)] / 4.15
+        // Add in time to be user selectable
+        const baseTime = 30;
+        const gravityFactor = 1.65 * (0.000125 ** (this.og - 1));
+        const timeFactor = (1 - (euler ** (-0.04 * baseTime))) / 4.15;
+        const utilization = gravityFactor * timeFactor;
+        // finally IBU calculations using this formula: IBU = AAU x U x 75 / Volume
+        this.ibu += (aauActual * utilization * 75) / this.volume;
+
         this.ingredients.hops.push({ hop, weight });
     }
 
     private addYeast({ yeast }: { yeast: YeastModel }) {
-        // TODO: Add logic for calculating estimated ABV/FG and updating recipe
         this.ingredients.yeasts.push({ yeast });
-        console.log(yeast);
+        this.calculateFgAndAbv();
+    }
+
+    private calculateFgAndAbv() {
+        // Helper fn to pick max attentuation to be optimistic, or default to 75
+        const attentuationGetter = (yeast) => yeast.Attenuation[1] || 75;
+        // Add together all yeast as a start to get average attentuation
+        const attenuationSum = this.ingredients.yeasts.reduce((attenuation, { yeast }) => {
+            const currAttenuation = attentuationGetter(yeast);
+            return attenuation + currAttenuation;
+        }, 0);
+        // get avg attentuation and convert to the estimated % left over after fermentation
+        const avgAttenuation = (100 - attenuationSum / this.ingredients.yeasts.length) / 100;
+        // fg is just ogGravityPoints * the estimated % left over after fermentation
+        // ogGravityPoints is the ending decimal as a whole number 
+        const ogGravityPoints = (this.og * 1000) - 1000;
+        const fgGravityPoints = avgAttenuation * ogGravityPoints;
+        // turn FG back into standard gravity notation by dividing by 1000 and adding 1
+        // if fd is NaN we use the og since the math didn't work out
+        this.fg = 1 + fgGravityPoints / 1000 || this.og;
+
+        // calculating abv now that we have fg - the formula: ABV = 1.3291 x ((OG – FG) / FG)  x 100
+        this.abv = 1.3291 * ((this.og - this.fg) / this.fg) * 100;
     }
 }
