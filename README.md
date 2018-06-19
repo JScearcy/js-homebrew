@@ -10,6 +10,12 @@ A tool to help create homebrew recipes quickly and easily.
 From within the root directory:
 * `npm start`
 
+## Using Docker
+From root directory:
+* `docker build -t homebrew .`
+
+* `docker run -p 3001:3001 -it homebrew`
+* using override port: `docker run -e PORT=4000 -p 4000:4000 -it  homebrew`
 
 ## TODOS:
 server: further implement unit tests

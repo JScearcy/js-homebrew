@@ -12,6 +12,6 @@ async function bootstrap() {
         root: path.resolve(__dirname + '/../dist/js-homebrew-recipe-client'),
     });
 
-    app.listen(PORT);
+    app.listen(PORT, '0.0.0.0');
 }
 bootstrap();
