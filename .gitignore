@@ -2,3 +2,4 @@
 **/dist
 **/coverage
 *.list
+js-homebrew-recipe-server/**/js-homebrew-recipe-client
