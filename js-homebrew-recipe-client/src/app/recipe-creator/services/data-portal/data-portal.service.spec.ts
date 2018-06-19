@@ -37,7 +37,7 @@ describe('DataPortalService', () => {
             expect(mockGrains[0].id).toBe(grainCall[0].PPG);
         });
 
-        const mockReq = httpMock.expectOne('http://localhost:3000/api/v1/grains');
+        const mockReq = httpMock.expectOne(`${service['baseUrl']}/api/v1/grains`);
         expect(mockReq.cancelled).toBeFalsy();
         expect(mockReq.request.responseType).toEqual('json');
         mockReq.flush(mockGrains);
