@@ -4,7 +4,7 @@ import * as path from 'path';
 import { AppModule } from './app/app.module';
 import { FastifyAdapter } from '@nestjs/core/adapters/fastify-adapter';
 
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 8080;
 
 async function bootstrap() {
     const app = await NestFactory.create(AppModule, new FastifyAdapter());

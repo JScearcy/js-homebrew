@@ -3,7 +3,7 @@
         <input type="text" [placeholder]="placeholder" [attr.aria-label]="placeholder" matInput [matAutocomplete]="auto" formControlName="ingredient"
         />
         <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayFn">
-            <mat-option *ngFor="let option of _options" [value]="option">
+            <mat-option *ngFor="let option of displayOptions" [value]="option">
                 {{ displayFn(option) }}
             </mat-option>
         </mat-autocomplete>

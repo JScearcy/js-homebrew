@@ -15,13 +15,13 @@ export class RcIngredientFormComponent implements OnInit, OnChanges {
     @Input() filterValueGetter;
     @Input() placeholder = '';
     @Output() addedIngredient = new EventEmitter<AddIngredientModel>();
-    private ingredientForm: FormGroup;
-    private _options;
+    public displayOptions;
+    public ingredientForm: FormGroup;
 
     constructor(private fb: FormBuilder) { }
 
     ngOnInit() {
-        this._options = this.options;
+        this.displayOptions = this.options;
 
         const ingredientFormOptions: any = {
             ingredient: [null, Validators.required]
@@ -43,7 +43,7 @@ export class RcIngredientFormComponent implements OnInit, OnChanges {
 
     ngOnChanges(changes: SimpleChanges) {
         if (changes && changes.options && changes.options.currentValue) {
-            this._options = changes.options.currentValue;
+            this.displayOptions = changes.options.currentValue;
         }
     }
 
@@ -60,12 +60,12 @@ export class RcIngredientFormComponent implements OnInit, OnChanges {
     filter(val, filterValueGetter) {
         if (val) {
             val = filterValueGetter(val);
-            this._options = this.options.filter(option => {
+            this.displayOptions = this.options.filter(option => {
                 const optionVal = filterValueGetter(option);
                 return optionVal.toLowerCase().includes(val.toLowerCase())
             });
         } else {
-            this._options = this.options;
+            this.displayOptions = this.options;
         }
     }
 
