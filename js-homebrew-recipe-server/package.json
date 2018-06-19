@@ -8,6 +8,7 @@
     "format": "prettier --write \"**/*.ts\"",
     "start": "ts-node -r tsconfig-paths/register src/main.ts",
     "start:dev": "nodemon",
+    "start:debug": "nodemon --config nodemon-debug.json",
     "prestart:prod": "rm -rf dist && tsc && mkdir ./dist/data && cp ./src/data/Fermentables.db ./dist/data/Fermentables.db",
     "start:prod": "node dist/main.js",
     "start:hmr": "node dist/server",
@@ -33,7 +34,6 @@
     "typescript": "^2.6.2"
   },
   "devDependencies": {
-    "@types/express": "^4.0.39",
     "@types/jest": "^21.1.8",
     "@types/node": "^9.3.0",
     "@types/supertest": "^2.0.4",

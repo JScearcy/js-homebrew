@@ -1,0 +1,11 @@
+.rc__ingredient-input,
+.rc__ingredient-weight-input,
+.rc__add-ingredient,
+.rc__ingredient-results-container,
+.rc__add-ingredient {
+    margin-left: 5px;
+}
+
+.rc__ingredient-weight-input {
+    max-width: 90px;
+}

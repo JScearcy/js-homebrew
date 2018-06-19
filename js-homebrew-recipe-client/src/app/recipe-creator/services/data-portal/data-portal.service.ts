@@ -1,11 +1,12 @@
 import { Injectable } from '@angular/core';
-import { map } from 'rxjs/operators';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
 
 import { GrainModel } from '../../../../../../models/grain-model'
 import { HopModel } from '../../../../../../models/hop-model'
 import { YeastModel } from '../../../../../../models/yeast-model'
+import { environment } from '../../../../environments/environment';
 
 @Injectable({
     providedIn: 'root'
@@ -14,6 +15,7 @@ export class DataPortalService {
     private grains: GrainModel[] = null;
     private hops: HopModel[] = null;
     private yeasts: YeastModel[] = null;
+    private baseUrl = environment.baseUrl || '';
 
     constructor(private http: HttpClient) { }
     // TODO: Extract helper function in order to reduce duplication
@@ -24,7 +26,7 @@ export class DataPortalService {
                 observer.complete();
             });
         }
-        return this.http.get<GrainModel[]>('/api/v1/grains')
+        return this.http.get<GrainModel[]>(`${this.baseUrl}/api/v1/grains`)
             .pipe(
                 map(grains => {
                     this.grains = grains.map(grain => new GrainModel(grain));
@@ -40,7 +42,7 @@ export class DataPortalService {
                 observer.complete();
             });
         }
-        return this.http.get<HopModel[]>('/api/v1/hops')
+        return this.http.get<HopModel[]>(`${this.baseUrl}/api/v1/hops`)
             .pipe(
                 map(hops => {
                     this.hops = hops.map(hop => new HopModel(hop));
@@ -56,7 +58,7 @@ export class DataPortalService {
                 observer.complete();
             });
         }
-        return this.http.get<YeastModel[]>('/api/v1/yeasts')
+        return this.http.get<YeastModel[]>(`${this.baseUrl}/api/v1/yeasts`)
             .pipe(
                 map(yeasts => {
                     this.yeasts = yeasts.map(yeast => new YeastModel(yeast));

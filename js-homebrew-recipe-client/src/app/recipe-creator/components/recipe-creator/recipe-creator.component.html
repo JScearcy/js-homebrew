@@ -1,20 +1,13 @@
 <section class="rc__ingredients-container rc__flex-container rc__flex-basis-0">
     <section class="rc__ingredient-container rc__flex-1">
         <h2 class="rc__add-ingredient-title">Grains</h2>
-        <form class="rc__ingredient-input-container rc__flex-container" [formGroup]="grainForm">
-            <mat-form-field class="rc__ingredient-input rc__flex-3">
-                <input type="text" placeholder="Grain" aria-label="Grains" matInput [matAutocomplete]="autoGrain" formControlName="grain" />
-                <mat-autocomplete #autoGrain="matAutocomplete" [displayWith]="displayGrain">
-                    <mat-option *ngFor="let option of grainOptions | async" [value]="option">
-                        {{ option.name }} | {{ option.lovi }} | {{ option.PPG }}
-                    </mat-option>
-                </mat-autocomplete>
-            </mat-form-field>
-            <mat-form-field class="rc__ingredient-weight-input rc__flex-1">
-                <input matInput type="number" placeholder="Weight (lbs)" formControlName="weight" />
-            </mat-form-field>
-            <rc-add-button class="rc__add-ingredient rc__flex-1" type="reset" (click)="addGrain()"></rc-add-button>
-        </form>
+        <rc-ingredient-form
+            [displayFn]="displayGrain"
+            [options]="grainOptions | async"
+            [filterValueGetter]="grainFilterValueGetter"
+            (addedIngredient)="addIngredient($event)" 
+            weightUnit="(lbs)"
+            placeholder="Grain"></rc-ingredient-form>
         <div class="rc__ingredient-results-container rc__flex-container rc__flex-basis-0" *ngFor="let grainIngredient of recipe.ingredients.grains">
             <span class="rc__ingredient-results-name rc__flex-3">{{ grainIngredient.grain.name }}</span>
             <span class="rc__ingredient-results-weight rc__flex-1">{{ grainIngredient.weight }} lbs</span>
@@ -22,45 +15,31 @@
     </section>
     <section class="rc__ingredient-container rc__flex-1">
         <h2 class="rc__add-ingredient-title">Hops</h2>
-        <form class="rc__ingredient-input-container rc__flex-container" [formGroup]="hopForm">
-                <mat-form-field class="rc__ingredient-input rc__flex-3">
-                    <input type="text" placeholder="Hop" aria-label="Hops" matInput [matAutocomplete]="autoHop" formControlName="hop" />
-                    <mat-autocomplete #autoHop="matAutocomplete" [displayWith]="displayHop">
-                        <mat-option *ngFor="let option of hopOptions | async" [value]="option">
-                            {{ option.Name }}
-                        </mat-option>
-                    </mat-autocomplete>
-                </mat-form-field>
-                <mat-form-field class="rc__ingredient-weight-input rc__flex-1">
-                    <input matInput type="number" placeholder="Weight (oz)" formControlName="weight" />
-                </mat-form-field>
-                <rc-add-button class="rc__add-ingredient rc__flex-1" type="reset" (click)="addHop()"></rc-add-button>
-            </form>
-            <div class="rc__ingredient-results-container rc__flex-container rc__flex-basis-0" *ngFor="let hopIngredient of recipe.ingredients.hops">
-                <span class="rc__ingredient-results-name rc__flex-3">{{ hopIngredient.hop.Name }}</span>
-                <span class="rc__ingredient-results-weight rc__flex-1">{{ hopIngredient.weight }} oz</span>
-            </div>
+        <rc-ingredient-form
+            [displayFn]="displayHop"
+            [options]="hopOptions | async"
+            [filterValueGetter]="hopFilterValueGetter"
+            (addedIngredient)="addIngredient($event)"
+            weightUnit="(oz)"
+            placeholder="Hop"></rc-ingredient-form>
+        <div class="rc__ingredient-results-container rc__flex-container rc__flex-basis-0" *ngFor="let hopIngredient of recipe.ingredients.hops">
+            <span class="rc__ingredient-results-name rc__flex-3">{{ hopIngredient.hop.Name }}</span>
+            <span class="rc__ingredient-results-weight rc__flex-1">{{ hopIngredient.weight }} oz</span>
+        </div>
     </section>
     <section class="rc__ingredient-container rc__flex-1">
         <h2 class="rc__add-ingredient-title">Yeast</h2>
-        <form class="rc__ingredient-input-container rc__flex-container" [formGroup]="yeastForm">
-                <mat-form-field class="rc__ingredient-input rc__flex-3">
-                    <input type="text" placeholder="Yeast" aria-label="Yeast" matInput [matAutocomplete]="autoYeast" formControlName="yeast" />
-                    <mat-autocomplete #autoYeast="matAutocomplete" [displayWith]="displayYeast">
-                        <mat-option *ngFor="let option of yeastOptions | async" [value]="option">
-                            {{ option.Name }}
-                        </mat-option>
-                    </mat-autocomplete>
-                </mat-form-field>
-                <rc-add-button class="rc__add-ingredient rc__flex-1" type="reset" (click)="addYeast()"></rc-add-button>
-            </form>
-            <div class="rc__ingredient-results-container rc__flex-container rc__flex-basis-0" *ngFor="let yeastIngredient of recipe.ingredients.yeasts">
-                <span class="rc__ingredient-results-name rc__flex-3">{{ yeastIngredient.yeast.Name }}</span>
-            </div>
+        <rc-ingredient-form
+            [displayFn]="displayYeast"
+            [options]="yeastOptions | async"
+            [filterValueGetter]="yeastFilterValueGetter"
+            (addedIngredient)="addIngredient($event)"
+            placeholder="Yeast"></rc-ingredient-form>
+        <div class="rc__ingredient-results-container rc__flex-container rc__flex-basis-0" *ngFor="let yeastIngredient of recipe.ingredients.yeasts">
+            <span class="rc__ingredient-results-name rc__flex-3">{{ yeastIngredient.yeast.Name }}</span>
+        </div>
     </section>
 </section>
 <section class="rc__recipe-stats-container rc__flex-container rc__flex-basis-0">
     <rc-recipe-stats class="rc__flex-1" [recipe]="recipe"></rc-recipe-stats>
 </section>
-
-<!-- TODO: Move each Form (grain, hops, yeast) to a genericized component -->

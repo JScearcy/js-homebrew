@@ -1,3 +1,16 @@
-<p>
-  rc-ingredient-form works!
-</p>
+<form class="rc__ingredient-input-container rc__flex-container" [formGroup]="ingredientForm">
+    <mat-form-field class="rc__ingredient-input rc__flex-3">
+        <input type="text" [placeholder]="placeholder" [attr.aria-label]="placeholder" matInput [matAutocomplete]="auto" formControlName="ingredient"
+        />
+        <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayFn">
+            <mat-option *ngFor="let option of _options" [value]="option">
+                {{ displayFn(option) }}
+            </mat-option>
+        </mat-autocomplete>
+    </mat-form-field>
+
+    <mat-form-field class="rc__ingredient-weight-input rc__flex-1" *ngIf="weightUnit">
+        <input matInput type="number" placeholder="Weight {{ weightUnit }}" formControlName="weight" />
+    </mat-form-field>
+    <rc-add-button class="rc__add-ingredient rc__flex-1" type="reset" (click)="addIngredient()"></rc-add-button>
+</form>

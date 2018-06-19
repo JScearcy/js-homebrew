@@ -18,82 +18,32 @@ export class RecipeCreatorComponent implements OnInit {
     public grainOptions: Observable<GrainModel[]>;
     public hopOptions: Observable<HopModel[]>;
     public yeastOptions: Observable<YeastModel[]>;
-    public grainForm: FormGroup;
-    public hopForm: FormGroup;
-    public yeastForm: FormGroup;
+    public grainFilterValueGetter: (val) => string;
+    public hopFilterValueGetter: (val) => string;
+    public yeastFilterValueGetter: (val) => string;
     public recipe: RecipeModel;
 
     constructor(private dataPortal: DataPortalService, private fb: FormBuilder) { 
-        this.grainForm = fb.group({
-            grain: [null, Validators.required],
-            weight: [null, Validators.required],
-        });
-        this.hopForm = fb.group({
-            hop: [null, Validators.required],
-            weight: [null, Validators.required],
-        });
-        this.yeastForm = fb.group({
-            yeast: [null, Validators.required],
-        });
         this.recipe = new RecipeModel(5);
     }
 
     ngOnInit() {
-        this.grainOptions = this.filterHandler(this.dataPortal.getGrains(), this.grainForm, (val) => {
-                let name = null;
-                if (val && val.grain) {
-                    name = val.grain.name || val.grain;
-                }
-                return name;
-        });
+        this.grainOptions = this.dataPortal.getGrains();
+        this.grainFilterValueGetter = this.filterValueGetter('name');
 
-        this.hopOptions = this.filterHandler(this.dataPortal.getHops(), this.hopForm, (val) => {
-            let name = null;
-            if (val && val.hop) {
-                name = val.hop.Name || val.hop;
-            }
-            return name;
-        });
-        this.yeastOptions = this.filterHandler(this.dataPortal.getYeasts(), this.yeastForm, (val) => {
-            let name = null;
-            if (val && val.yeast) {
-                name = val.yeast.Name || val.yeast;
-            }
-            return name;
-        });
+        this.hopOptions = this.dataPortal.getHops();
+        this.hopFilterValueGetter = this.filterValueGetter('Name');
+
+        this.yeastOptions = this.dataPortal.getYeasts();
+        this.yeastFilterValueGetter = this.filterValueGetter('Name');
     }
 
-    addGrain() {
-        if (this.grainForm.valid) {
-            this.recipe.addIngredient({
-                ingredient: this.grainForm.get('grain').value,
-                weight: this.grainForm.get('weight').value,
-            });
-            this.grainForm.reset();
-        }
-    }
-
-    addHop() {
-        if (this.hopForm.valid) {
-            this.recipe.addIngredient({
-                ingredient: this.hopForm.get('hop').value,
-                weight: this.hopForm.get('weight').value,
-            })
-            this.hopForm.reset();
-        }
-    }
-
-    addYeast() {
-        if (this.yeastForm.valid) {
-            this.recipe.addIngredient({
-                ingredient: this.yeastForm.get('yeast').value,
-                weight: null,
-            });
-        }
+    addIngredient(ingredient) {
+        this.recipe.addIngredient(ingredient);
     }
 
     displayGrain(grain?: GrainModel): string | undefined {
-        return grain ? grain.name : undefined;
+        return grain ? `${grain.name} | ${grain.PPG} | ${grain.lovi}` : undefined;
     }
 
     displayHop(hop?: HopModel): string | undefined {
@@ -104,30 +54,13 @@ export class RecipeCreatorComponent implements OnInit {
         return yeast ? yeast.Name : undefined;
     }
 
-    autoCompleteFilter(val: string, options) {
-        if (val) {
-            return options.filter(option => {
-                const name = option.name || option.Name;
-                return name.toLowerCase().includes(val.toLowerCase());
-            });
-        } else {
-            return options;
+    filterValueGetter(propertyName: string): (val) => string {
+        return (val) => {
+            let name = null;
+            if (val) {
+                name = val[propertyName] || val;
+            }
+            return name;
         }
-    }
-
-    filterHandler(obs, control: AbstractControl, valueGetter: (val) => string) {
-        return obs
-        .pipe(
-            flatMap(grains => {
-                return control.valueChanges
-                .pipe(
-                    startWith(null),
-                    map(val => {
-                        let name = valueGetter(val);
-                        return this.autoCompleteFilter(name, grains);
-                    })
-                )
-            })
-        );
     }
 }
