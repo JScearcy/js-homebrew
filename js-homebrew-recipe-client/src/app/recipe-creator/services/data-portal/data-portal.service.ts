@@ -18,52 +18,39 @@ export class DataPortalService {
     private baseUrl = environment.baseUrl || '';
 
     constructor(private http: HttpClient) { }
-    // TODO: Extract helper function in order to reduce duplication
+
     getGrains(): Observable<GrainModel[]> {
-        if (this.grains !== null) {
-            return Observable.create((observer) => {
-                observer.next(this.grains);
-                observer.complete();
-            });
-        }
-        return this.http.get<GrainModel[]>(`${this.baseUrl}/api/v1/grains`)
-            .pipe(
-                map(grains => {
-                    this.grains = grains.map(grain => new GrainModel(grain));
-                    return this.grains;
-                })
-            );
+        return this.getIngredientObservable(this.grains, `${this.baseUrl}/api/v1/grains`, grains => {
+            this.grains = grains.map(grain => new GrainModel(grain));
+            return this.grains;
+        });
     }
 
     getHops(): Observable<HopModel[]> {
-        if (this.hops !== null) {
-            return Observable.create((observer) => {
-                observer.next(this.hops);
-                observer.complete();
-            });
-        }
-        return this.http.get<HopModel[]>(`${this.baseUrl}/api/v1/hops`)
-            .pipe(
-                map(hops => {
-                    this.hops = hops.map(hop => new HopModel(hop));
-                    return this.hops
-                })
-            );
+        return this.getIngredientObservable(this.hops, `${this.baseUrl}/api/v1/hops`, hops => {
+            this.hops = hops.map(hop => new HopModel(hop));
+            return this.hops
+        });
     }
 
     getYeasts(): Observable<YeastModel[]> {
-        if (this.yeasts !== null) {
-            return Observable.create((observer) => {
-                observer.next(this.yeasts);
+        return this.getIngredientObservable(this.yeasts, `${this.baseUrl}/api/v1/yeasts`, yeasts => {
+            this.yeasts = yeasts.map(yeast => new YeastModel(yeast));
+            return this.yeasts;
+        });
+    }
+
+    getIngredientObservable<T>(ingredientList: T, url: string, mapCb): Observable<T> {
+        if (ingredientList !== null) {
+            return Observable.create(observer => {
+                observer.next(ingredientList);
                 observer.complete();
             });
+        } else {
+            return this.http.get<T[]>(url)
+                .pipe(
+                    map(mapCb)
+                );
         }
-        return this.http.get<YeastModel[]>(`${this.baseUrl}/api/v1/yeasts`)
-            .pipe(
-                map(yeasts => {
-                    this.yeasts = yeasts.map(yeast => new YeastModel(yeast));
-                    return this.yeasts;
-                })
-            );
     }
 }

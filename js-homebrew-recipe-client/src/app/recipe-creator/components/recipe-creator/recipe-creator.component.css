@@ -2,12 +2,18 @@
     height: 75%
 }
 
-.rc__ingredient-container {
-    border: 1px solid #999;
-    border-radius: 5px;
-    margin: 5px;
+.rc__add-ingredients-accordian {
+    min-width: 400px;
 }
 
-.rc__add-ingredient-title {
-    text-align: center;
+.rc__ingredients-display-table {
+    width: 100%;
+}
+
+.rc__added-ingredients-tabs {
+    margin-left: 5px;
+}
+
+.rc__hops-table-notes {
+    max-width: 50px;
 }

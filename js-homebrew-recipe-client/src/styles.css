@@ -12,6 +12,7 @@ body, html {
 
 .rc__flex-container {
     display: flex;
+    flex-wrap: wrap;
 }
 
 .rc__flex-basis-0 > * {

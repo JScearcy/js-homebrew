@@ -16,9 +16,9 @@ export class RecipeModel {
     srm: number = 0; // final color estimate
     efficiency: number = 0.7; // Brewers efficiency
     ingredients: {
-        grains: { grain: GrainModel, weight: number }[],
-        hops: { hop: HopModel, weight: number }[],
-        yeasts: { yeast: YeastModel }[],
+        grains: IngredientAdditionModel<GrainModel>[],
+        hops: IngredientAdditionModel<HopModel>[],
+        yeasts: IngredientAdditionModel<YeastModel>[],
     } =
         {
             grains: [],
@@ -64,7 +64,7 @@ export class RecipeModel {
         // if srm is greater than 50 then it is considered black, so max at 50
         this.srm = this.srm > 50 ? 50 : this.srm;
 
-        this.ingredients.grains.push({ grain, weight });
+        this.ingredients.grains.push({ ingredient: grain, weight });
 
         this.calculateFgAndAbv();
     }
@@ -86,11 +86,11 @@ export class RecipeModel {
         // finally IBU calculations using this formula: IBU = AAU x U x 75 / Volume
         this.ibu += (aauActual * utilization * 75) / this.volume;
 
-        this.ingredients.hops.push({ hop, weight });
+        this.ingredients.hops.push({ ingredient: hop, weight });
     }
 
     private addYeast({ yeast }: { yeast: YeastModel }) {
-        this.ingredients.yeasts.push({ yeast });
+        this.ingredients.yeasts.push({ ingredient: yeast, weight: null });
         this.calculateFgAndAbv();
     }
 
@@ -98,8 +98,8 @@ export class RecipeModel {
         // Helper fn to pick max attentuation to be optimistic, or default to 75
         const attentuationGetter = (yeast) => yeast.Attenuation[1] || 75;
         // Add together all yeast as a start to get average attentuation
-        const attenuationSum = this.ingredients.yeasts.reduce((attenuation, { yeast }) => {
-            const currAttenuation = attentuationGetter(yeast);
+        const attenuationSum = this.ingredients.yeasts.reduce((attenuation, { ingredient }) => {
+            const currAttenuation = attentuationGetter(ingredient);
             return attenuation + currAttenuation;
         }, 0);
         // get avg attentuation and convert to the estimated % left over after fermentation

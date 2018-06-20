@@ -1,0 +1,26 @@
+<mat-accordion class="rc__flex-1 rc__add-ingredients-accordian">
+    <mat-expansion-panel>
+        <mat-expansion-panel-header>
+            <mat-panel-title>Grain</mat-panel-title>
+            <mat-panel-description>Add Grains</mat-panel-description>
+        </mat-expansion-panel-header>
+        <rc-ingredient-form [displayFn]="displayGrain" [options]="grainOptions | async" [filterValueGetter]="grainFilterValueGetter"
+            (addedIngredient)="addIngredient($event)" weightUnit="(lbs)" placeholder="Grain"></rc-ingredient-form>
+    </mat-expansion-panel>
+    <mat-expansion-panel>
+        <mat-expansion-panel-header>
+            <mat-panel-title>Hops</mat-panel-title>
+            <mat-panel-description>Add Hops</mat-panel-description>
+        </mat-expansion-panel-header>
+        <rc-ingredient-form [displayFn]="displayHop" [options]="hopOptions | async" [filterValueGetter]="hopFilterValueGetter" (addedIngredient)="addIngredient($event)"
+            weightUnit="(oz)" placeholder="Hop"></rc-ingredient-form>
+    </mat-expansion-panel>
+    <mat-expansion-panel>
+        <mat-expansion-panel-header>
+            <mat-panel-title>Yeast</mat-panel-title>
+            <mat-panel-description>Add Yeast</mat-panel-description>
+        </mat-expansion-panel-header>
+        <rc-ingredient-form [displayFn]="displayYeast" [options]="yeastOptions | async" [filterValueGetter]="yeastFilterValueGetter"
+            (addedIngredient)="addIngredient($event)" placeholder="Yeast"></rc-ingredient-form>
+    </mat-expansion-panel>
+</mat-accordion>
