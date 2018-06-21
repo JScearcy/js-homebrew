@@ -1,5 +1,5 @@
 .rc__ingredients-container {
-    height: 75%
+    min-height: 75%
 }
 
 .rc__add-ingredients-accordian {

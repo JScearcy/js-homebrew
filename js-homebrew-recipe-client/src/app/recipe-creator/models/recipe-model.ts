@@ -9,9 +9,9 @@ import { YeastModel } from '@models/yeast-model';
  */
 export class RecipeModel {
     og: number = 1.000; // Original Gravity estimate
-    fg: number; // Final Gravity estimate
+    fg: number = 1.000; // Final Gravity estimate
     ibu: number = 0; // IBU estimate
-    abv: number; // ABV estimate
+    abv: number = 0; // ABV estimate
     mcu: number = 0; // initial color estimate used for calculating SRM
     srm: number = 0; // final color estimate
     efficiency: number = 0.7; // Brewers efficiency
